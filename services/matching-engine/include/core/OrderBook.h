@@ -50,6 +50,9 @@ public:
     // Get symbol
     const std::string& get_symbol() const { return symbol_; }
 
+    // Get a specific order by ID
+    const Order* get_order(uint64_t order_id) const;
+
 private:
     std::string symbol_;
 
@@ -57,8 +60,8 @@ private:
     std::unordered_map<uint64_t, std::unique_ptr<Order>> orders_;
 
     // Priority queues for bid and ask sides (current high-performance implementation)
-    std::priority_queue<Order*, std::vector<Order*>, BuyOrderComparator> bids_;
-    std::priority_queue<Order*, std::vector<Order*>, SellOrderComparator> asks_;
+    mutable std::priority_queue<Order*, std::vector<Order*>, BuyOrderComparator> bids_;
+    mutable std::priority_queue<Order*, std::vector<Order*>, SellOrderComparator> asks_;
 
     // Alternative map-based implementation
     std::map<double, std::list<Order*>, std::greater<double>> bid_levels_;
@@ -68,7 +71,7 @@ private:
     std::unordered_map<uint64_t, std::list<Order*>::iterator> order_iterators_;
 
     // Trade ID generator
-    uint64_t net_trade_id{1};
+    uint64_t next_trade_id_{1};
 
     // Thread safety
     mutable std::mutex mutex_;

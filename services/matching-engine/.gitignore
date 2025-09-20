@@ -1,0 +1,44 @@
+# Build directories
+build/
+bin/
+lib/
+
+# Executables
+matching_engine_cli
+matching_engine_benchmark
+
+# Test executables
+tests/load_tests
+tests/core_tests
+
+# Results and logs
+results/
+*.csv
+*.log
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+CTestTestfile.cmake
+Testing/
+Makefile
+
+# Dependencies
+_deps/

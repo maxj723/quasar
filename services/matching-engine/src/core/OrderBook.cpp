@@ -1,4 +1,4 @@
-#include "services/matching-engine/include/core/OrderBook.h"
+#include "core/OrderBook.h"
 #include <algorithm>
 #include <map>
 
@@ -170,33 +170,31 @@ void OrderBook::clean_filled_orders() {
 double OrderBook::get_best_bid() const {
     std::lock_guard<std::mutex> lock(mutex_);
 
-    // Find first non-cancelled order
-    auto temp_bids = bids_;
-    while (!temp_bids.empty()) {
-        Order* order = temp_bids.top();
-        if (order->status != OrderStatus::CANCELLED && !order->is_filled()) {
-            return order->price;
-        }
-        temp_bids.pop();
+    // Clean out any stale orders from the top
+    while (!bids_.empty() &&
+           (bids_.top()->is_filled() || bids_.top()->status == OrderStatus::CANCELLED)) {
+        bids_.pop();
     }
 
-    return 0.0;
+    if (bids_.empty()) {
+        return 0.0;
+    }
+    return bids_.top()->price;
 }
 
 double OrderBook::get_best_ask() const {
     std::lock_guard<std::mutex> lock(mutex_);
 
-    // Find first non-cancelled order
-    auto temp_asks = asks_;
-    while (!temp_asks.empty()) {
-        Order* order = temp_asks.top();
-        if (order->status != OrderStatus::CANCELLED && !order->is_filled()) {
-            return order->price;
-        }
-        temp_asks.pop();
+    // Clean out any stale orders from the top
+    while (!asks_.empty() &&
+           (asks_.top()->is_filled() || asks_.top()->status == OrderStatus::CANCELLED)) {
+        asks_.pop();
     }
 
-    return 0.0;
+    if (asks_.empty()) {
+        return 0.0;
+    }
+    return asks_.top()->price;
 }
 
 double OrderBook::get_spread() const {
@@ -294,6 +292,15 @@ uint64_t OrderBook::get_ask_volume() const {
     }
 
     return total_volume;
+}
+
+const Order* OrderBook::get_order(uint64_t order_id) const {
+    std::lock_guard<std::mutex> lock(mutex_);
+    auto it = orders_.find(order_id);
+    if (it != orders_.end()) {
+        return it->second.get();
+    }
+    return nullptr;
 }
 
 } // namespace quasar

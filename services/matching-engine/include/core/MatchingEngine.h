@@ -77,8 +77,7 @@ private:
     // Helper methods
     OrderBook* get_or_create_book(const std::string& symbol);
     void notify_trade(const Trade& trade);
-    void update_stats_for_order(const Order& order);
-    void update_stats_for_trade(const Trade& trade);
+    void update_stats_for_trade(const Trade& trade, OrderBook* book);
 };
 
 } // namespace quasar
