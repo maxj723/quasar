@@ -1,0 +1,1 @@
+timestamp,orders_processed,total_trades,active_orders,messages_published,kafka_errors,orders_per_sec,trades_per_sec

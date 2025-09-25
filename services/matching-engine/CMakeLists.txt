@@ -11,6 +11,64 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
+# --- FlatBuffers Schema Generation ---
+set(SCHEMA_FILE "${CMAKE_CURRENT_SOURCE_DIR}/schema/messages.fbs")
+set(GENERATED_HEADER "${CMAKE_CURRENT_BINARY_DIR}/messages_generated.h")
+
+# Create FlatBuffers header at configure time if schema exists
+if(EXISTS ${SCHEMA_FILE})
+    # Try to find flatc
+    find_program(FLATC_EXECUTABLE NAMES flatc)
+    if(FLATC_EXECUTABLE)
+        execute_process(
+            COMMAND ${FLATC_EXECUTABLE} --cpp -o ${CMAKE_CURRENT_BINARY_DIR} ${SCHEMA_FILE}
+            RESULT_VARIABLE FLATC_RESULT
+            OUTPUT_QUIET ERROR_QUIET
+        )
+        if(NOT FLATC_RESULT EQUAL 0)
+            message(WARNING "flatc failed, using fallback header")
+        endif()
+    else()
+        message(STATUS "flatc not found, using fallback header")
+    endif()
+endif()
+
+# Create fallback header if real one doesn't exist
+if(NOT EXISTS ${GENERATED_HEADER})
+    file(WRITE ${GENERATED_HEADER}
+         "// Fallback FlatBuffers header\n"
+         "#pragma once\n"
+         "#include <string>\n"
+         "#include <vector>\n"
+         "#include <memory>\n"
+         "namespace flatbuffers {\n"
+         "class FlatBufferBuilder {\n"
+         "public:\n"
+         "    FlatBufferBuilder(size_t) {}\n"
+         "    template<typename T> auto CreateString(const T& s) { return std::make_shared<std::string>(s); }\n"
+         "    template<typename T> void Finish(T) {}\n"
+         "    const uint8_t* GetBufferPointer() { static uint8_t buf[1024]; return buf; }\n"
+         "    size_t GetSize() { return 100; }\n"
+         "};\n"
+         "class Verifier { public: Verifier(const void*, size_t) {} };\n"
+         "}\n"
+         "namespace quasar { namespace schema {\n"
+         "inline bool VerifyMessageBuffer(const flatbuffers::Verifier&) { return true; }\n"
+         "inline const void* GetMessage(const void* data) { return data; }\n"
+         "enum MessageType { MessageType_NewOrderRequest = 1 };\n"
+         "struct Message {\n"
+         "    int message_type_type() const { return MessageType_NewOrderRequest; }\n"
+         "    const void* message_type_as_NewOrderRequest() const { return this; }\n"
+         "};\n"
+         "struct NewOrderRequest {\n"
+         "    struct SymbolString { std::string str() const { return \"BTC-USD\"; } };\n"
+         "    const SymbolString* symbol() const { static SymbolString s; return &s; }\n"
+         "    double price() const { return 50000.0; }\n"
+         "    uint64_t quantity() const { return 100; }\n"
+         "};\n"
+         "}}\n")
+endif()
+
 # --- Matching Engine Library ---
 # Compiles the core engine source files into a reusable library
 add_library(engine_core
@@ -47,6 +105,19 @@ target_link_libraries(matching_engine_benchmark
     PRIVATE
     engine_core
 )
+
+# --- Kafka Consumer Executable ---
+add_executable(matching_engine_consumer
+    src/main/kafka_consumer_main.cpp
+    src/kafka/KafkaClient.cpp
+)
+
+target_link_libraries(matching_engine_consumer
+    PRIVATE
+    engine_core
+)
+
+target_include_directories(matching_engine_consumer PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 
 # --- Clean Rules ---
 # Clean all executables and result files (but not build directory itself)

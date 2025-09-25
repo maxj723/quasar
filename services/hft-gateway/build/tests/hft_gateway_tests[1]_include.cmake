@@ -1,0 +1,5 @@
+if(EXISTS "/Users/maxjohnson/Documents/quasar/services/hft-gateway/build/tests/hft_gateway_tests[1]_tests.cmake")
+  include("/Users/maxjohnson/Documents/quasar/services/hft-gateway/build/tests/hft_gateway_tests[1]_tests.cmake")
+else()
+  add_test(hft_gateway_tests_NOT_BUILT hft_gateway_tests_NOT_BUILT)
+endif()

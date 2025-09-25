@@ -1,0 +1,7 @@
+{
+	"InstallScripts" : 
+	[
+		"/Users/maxjohnson/Documents/quasar/services/hft-gateway/build/_deps/googletest-subbuild/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

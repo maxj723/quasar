@@ -1,0 +1,1 @@
+/usr/bin/c++  -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/pipeline_load_test.dir/pipeline_load_test.cpp.o -o pipeline_load_test  -lpthread

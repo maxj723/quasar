@@ -1,0 +1,2 @@
+test_name,orders_processed,trades_generated,duration_seconds,actual_rate_ops,trade_rate_ops,min_latency_us,avg_latency_us,p50_latency_us,p95_latency_us,p99_latency_us,max_latency_us,active_orders
+isolated_engine,2000,0,5.30,377,0,1.83,30.34,7.75,40.00,218.62,15395.54,2000

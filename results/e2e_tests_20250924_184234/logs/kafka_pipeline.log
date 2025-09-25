@@ -1,0 +1,39 @@
+Quasar Matching Engine Kafka Consumer
+====================================
+Kafka Brokers: localhost:9092
+Orders Topic: orders.new
+Trades Topic: trades
+====================================
+Initializing Matching Engine Consumer...
+Initializing Kafka client (mock implementation)
+ Brokers: localhost:9092
+ Client ID: matching-engine-consumer
+ Orders Topic: orders.new
+Kafka client initialized successfully (mock)
+Matching Engine Consumer initialized successfully
+Starting Matching Engine Consumer
+
+=== MATCHING ENGINE STATISTICS ===
+Orders Processed: 291
+Total Trades: 203
+Messages Published: 203
+Kafka Errors: 0
+Delivery Errors: 0
+Engine Active Orders: 87
+Engine Total Trades: 203
+===================================
+
+Received signal 15, shutting down...
+
+=== MATCHING ENGINE STATISTICS ===
+Orders Processed: 378
+Total Trades: 277
+Messages Published: 277
+Kafka Errors: 0
+Delivery Errors: 0
+Engine Active Orders: 100
+Engine Total Trades: 277
+===================================
+Shutting down Kafka client...
+Kafka client shutdown complete
+Matching Engine Consumer stopped

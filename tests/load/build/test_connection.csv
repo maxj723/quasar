@@ -1,0 +1,2 @@
+timestamp,orders_sent,orders_acknowledged,connection_errors,send_errors,duration_seconds,actual_rate,min_latency_us,avg_latency_us,p50_latency_us,p95_latency_us,p99_latency_us,max_latency_us,concurrent_clients,target_rate
+2025-09-24 21:43:00,0,0,1,0,1.00,0,0.00,0.00,0.00,0.00,0.00,0.00,1,25

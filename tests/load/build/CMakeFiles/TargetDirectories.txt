@@ -1,0 +1,3 @@
+/Users/maxjohnson/Documents/quasar/tests/load/build/CMakeFiles/pipeline_load_test.dir
+/Users/maxjohnson/Documents/quasar/tests/load/build/CMakeFiles/edit_cache.dir
+/Users/maxjohnson/Documents/quasar/tests/load/build/CMakeFiles/rebuild_cache.dir

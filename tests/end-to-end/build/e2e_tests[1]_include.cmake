@@ -1,0 +1,5 @@
+if(EXISTS "/Users/maxjohnson/Documents/quasar/tests/end-to-end/build/e2e_tests[1]_tests.cmake")
+  include("/Users/maxjohnson/Documents/quasar/tests/end-to-end/build/e2e_tests[1]_tests.cmake")
+else()
+  add_test(e2e_tests_NOT_BUILT e2e_tests_NOT_BUILT)
+endif()
